@@ -28,6 +28,6 @@ const RegSchema = new mongoose.Schema({
 }
 )
 
-const evReg = mongoose.model('evReg',RegSchema);
+const evReg = mongoose.model('Reg',RegSchema);
 
 export default evReg;
