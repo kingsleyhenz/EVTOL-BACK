@@ -20,6 +20,10 @@ const RegSchema = new mongoose.Schema({
     state:{
         type:String,
         required:true
+    },
+    isBooked:{
+        type:Boolean,
+        required:true
     }
 },
 {
