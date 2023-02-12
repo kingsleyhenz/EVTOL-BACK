@@ -32,3 +32,25 @@ export const evtolRegister = async(req,res)=>{
       })
     }
 }
+
+export const loadEvtol = async(req,res)=>{
+    const { name, weight, code, image, carryTo ,evId } = req.body;
+  try {
+    const ev = await evReg.findById(evId);
+    if (!ev) {
+      return res.status(404).send("EV not found");
+    }
+    const load = new evload({
+      name,
+      weight,
+      code,
+      image,
+      carryTo,
+      carrier: evId,
+    });
+    await load.save();
+    res.send(load);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}

@@ -17,6 +17,10 @@ const LoadSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    carryTo:{
+        type:String,
+        required:true
+    },
     carrier:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "evReg"
