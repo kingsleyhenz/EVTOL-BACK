@@ -4,7 +4,7 @@ import { evtolRegister, loadEvtol } from "../controller/regAndLoad.js";
 const evRouter = express.Router();
 
 evRouter.post('/Register',evtolRegister)
-evRouter.post('/Load',loadEvtol)
+evRouter.post('/Load/:id',loadEvtol)
 
 
 
