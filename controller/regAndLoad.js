@@ -12,6 +12,7 @@ export const evtolRegister = async (req, res) => {
         weight,
         battery,
         state,
+        isBooked: [],
       });
       res.json({
         status: "Success",
@@ -27,19 +28,27 @@ export const evtolRegister = async (req, res) => {
     console.log(error);
     res.json({
       status: error,
-      message: "An error occured",
+      message: error.message,
     });
   }
 };
 
 export const loadEvtol = async (req, res) => {
   const { name, weight, code, image, carryTo } = req.body;
-  const evId = req.params.id;
+  const serialNo = req.params.serialNo;
   try {
-    //Find the EV with the given ID
-    const ev = await evReg.findById(evId);
+    const ev = await evReg.findOne({ serialNo });
     if (!ev) {
-      return res.status(404).send("EV not found");
+      return res.json({
+        status: "error",
+        message: "Error in Loading",
+      });
+    }
+    if (ev.state !== "IDLE") {
+      return res.json({
+        status: "error",
+        message: "This EVTOL has already been booked.",
+      });
     }
     const load = new evload({
       name,
@@ -50,8 +59,17 @@ export const loadEvtol = async (req, res) => {
       carrier: ev._id,
     });
     await load.save();
-    res.send(load);
+    ev.isBooked.push(load._id);
+    ev.state = "LOADING";
+    await ev.save();
+    res.json({
+      status: "Success",
+      data: load,
+    });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.json({
+      status: "Error",
+      message: error.message,
+    });
   }
 };

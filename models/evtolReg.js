@@ -17,14 +17,17 @@ const RegSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
-    state:{
-        type:String,
-        required:true
-    },
-    isBooked:{
-        type:Boolean,
-        required:true
-    }
+    state: {
+        type: String,
+        enum: ["IDLE", "LOADING", "DELIVERING", "DELIVERED", "RETURNING"],
+        default: "IDLE",
+      },
+    isBooked:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"evload"  
+        }
+    ]
 },
 {
     timestamps:true,
