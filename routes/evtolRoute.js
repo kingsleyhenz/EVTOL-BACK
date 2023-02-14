@@ -7,12 +7,12 @@ import { batteryLevel, checkAvailableEVTOL, checkLoadForParticularEV, getAllEvto
 
 const evRouter = express.Router();
 
-evRouter.post('/Register', evtolRegister)   //WORKING
-evRouter.post('/Load/:serialNo', loadEvtol)       //WORKING
-evRouter.get('/all', getAllEvtols)       //WORKING
-evRouter.get('/checkLoad/:id',checkLoadForParticularEV) //WORKING
-evRouter.get('/availableEV', checkAvailableEVTOL)       //WORKING
-evRouter.get('/batterylevel/:id', batteryLevel)        //WORKING
+evRouter.post('/Register', evtolRegister)   
+evRouter.post('/Load/:serialNo', loadEvtol)       
+evRouter.get('/all', getAllEvtols)       
+evRouter.get('/checkLoad/:id',checkLoadForParticularEV) 
+evRouter.get('/availableEV', checkAvailableEVTOL)       
+evRouter.get('/batterylevel/:id', batteryLevel)       
 
 
 
