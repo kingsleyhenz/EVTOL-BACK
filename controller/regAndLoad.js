@@ -82,12 +82,16 @@ export const loadEvtol = async (req, res) => {
 export const medImageUpload = async (req, res) => {
   try {
     const medToAddImg = await evload.findOne({name: req.params.name});
+    console.log(medToAddImg); // add this line to log the medToAddImg value
+
     if(!medToAddImg){
+      console.log('No such medication'); // add this line to log the error message
       return res.json({
         status: "Error",
         message: "No Such Medication",
       });
     }
+
     if(req.file){
       await evload.findOneAndUpdate({ name: req.params.name }, {
         $set: {
@@ -96,12 +100,24 @@ export const medImageUpload = async (req, res) => {
       }, {
         new: true
       });
+
+      // update evReg state to LOADED
+      const ev = await evReg.findById(medToAddImg.carrier);
+      console.log(ev); // add this line to log the ev value
+
+      if (ev && ev.state !== "LOADED") {
+        ev.state = "LOADED";
+        await ev.save();
+      }
+
       res.json({
         status: "Success",
         message: "Image Uploaded",
       });
     }
   } catch (error) {
+    console.log(error); // add this line to log the error
     res.json(error.message)
   }
+
 }

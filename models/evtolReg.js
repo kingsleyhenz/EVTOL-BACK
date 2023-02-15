@@ -19,7 +19,7 @@ const RegSchema = new mongoose.Schema({
     },
     state: {
         type: String,
-        enum: ["IDLE", "LOADING", "DELIVERING", "DELIVERED", "RETURNING"],
+        enum: ["IDLE", "LOADING","LOADED", "DELIVERING", "DELIVERED", "RETURNING"],
         default: "IDLE",
       },
     isBooked:[
