@@ -28,16 +28,6 @@ export const getUserMedications = async (req, res) => {
         message: "No loads with image uploaded",
       });
     }
-    // Update evReg state to LOADED for each load with image uploaded
-    // for (const load of loads) {
-    //   if (load.carrier) {
-    //     const ev = await evReg.findById(load.carrier);
-    //     if (ev && ev.state !== "LOADED") {
-    //       ev.state = "LOADED";
-    //       await ev.save();
-    //     }
-    //   }
-    // }
     res.json({
       status: "success",
       data: loads,
@@ -97,3 +87,4 @@ export const batteryLevel = async (req, res) => {
     });
   }
 };
+

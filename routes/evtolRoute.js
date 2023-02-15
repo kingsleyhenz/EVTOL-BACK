@@ -19,7 +19,7 @@ evRouter.get('/all', getAllEvtols)
 evRouter.get('/checkMeds',getUserMedications) 
 evRouter.get('/availableEV', checkAvailableEVTOL)       
 evRouter.get('/batterylevel/:id', batteryLevel)       
-
+// evRouter.put('/deliverMeds/:name', deliverMeds);
 
 
 

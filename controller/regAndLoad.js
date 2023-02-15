@@ -119,5 +119,37 @@ export const medImageUpload = async (req, res) => {
     console.log(error); // add this line to log the error
     res.json(error.message)
   }
-
 }
+
+// export const deliverMeds = async (req, res) => {
+//   const evtolName = req.params.name;
+
+//   try {
+//     const evtol = await evReg.findOne({ name: evtolName, state: 'LOADED' });
+//     if (!evtol) {
+//       return res.status(404).json({
+//         status: 'error',
+//         message: `EVTOL with name ${evtolName} and state 'LOADED' not found.`,
+//       });
+//     }
+
+//     evtol.state = 'DELIVERING';
+//     await evtol.save();
+
+//     setTimeout(async () => {
+//       evtol.state = 'DELIVERED';
+//       await evtol.save();
+//     }, 30 * 1000);
+
+//     res.json({
+//       status: 'success',
+//       message: `EVTOL with name ${evtolName} has been marked as delivering.`,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'An error occurred while marking the EVTOL as delivering.',
+//     });
+//   }
+// };
