@@ -19,34 +19,37 @@ export const getAllEvtols = async (req, res) => {
 };
 
 
-export const checkLoadForParticularEV = async (req, res) => {
+export const getUserMedications = async (req, res) => {
   try {
-    const evId = req.params.id;
-    const ev = await evReg.findById(evId);
-    if (!ev) {
+    const loads = await evload.find({ image: { $ne: null } });
+    if (loads.length === 0) {
       return res.json({
         status: "error",
-        message: "EV not found",
+        message: "No loads with image uploaded",
       });
     }
-    const loads = await evload.find({ carrier: evId });
-    if (!loads) {
-      return res.json({
-        status: "error",
-        message: "No Loads for this EVtol",
-      });
-    }
+    // Update evReg state to LOADED for each load with image uploaded
+    // for (const load of loads) {
+    //   if (load.carrier) {
+    //     const ev = await evReg.findById(load.carrier);
+    //     if (ev && ev.state !== "LOADED") {
+    //       ev.state = "LOADED";
+    //       await ev.save();
+    //     }
+    //   }
+    // }
     res.json({
-        status: "success",
-        data: loads,
+      status: "success",
+      data: loads,
     });
   } catch (error) {
     res.json({
-        status: "error",
-        message: error.message,
+      status: "error",
+      message: error.message,
     });
   }
 };
+
 
 export const checkAvailableEVTOL = async (req, res) => {
   try {
@@ -82,6 +85,7 @@ export const batteryLevel = async (req, res) => {
     res.json({
       status: "success",
       data: {
+        serialNo: ev.serialNo,
         batteryLevel: ev.battery,
       },
     });

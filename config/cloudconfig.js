@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
     allowedFormats: ["jpg", "png", "gif", "jpeg"],
     params:{
         folder:"EVTOL MEDICATIONS",
-        transformation:[{width: 400, height: 400, crop: "limit"}]
+        transformation:[{width: 200, height: 250, crop: "limit"}]
     }
 })
 
