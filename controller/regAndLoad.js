@@ -34,7 +34,7 @@ export const evtolRegister = async (req, res) => {
 };
 
 export const loadEvtol = async (req, res) => {
-  const { name, weight, code, image, carryTo } = req.body;
+  const { name, weight, code, carryTo } = req.body;
   const serialNo = req.params.serialNo;
   try {
     const ev = await evReg.findOne({ serialNo });
@@ -50,11 +50,16 @@ export const loadEvtol = async (req, res) => {
         message: "This EVTOL has already been booked.",
       });
     }
+    if (weight > ev.weight) {
+      return res.json({
+        status: "error",
+        message: "Weight of load is more than the weight of the EVTOL",
+      });
+    }
     const load = new evload({
       name,
       weight,
       code,
-      image,
       carryTo,
       carrier: ev._id,
     });
@@ -73,3 +78,30 @@ export const loadEvtol = async (req, res) => {
     });
   }
 };
+
+export const medImageUpload = async (req, res) => {
+  try {
+    const medToAddImg = await evload.findOne({name: req.params.name});
+    if(!medToAddImg){
+      return res.json({
+        status: "Error",
+        message: "No Such Medication",
+      });
+    }
+    if(req.file){
+      await evload.findOneAndUpdate({ name: req.params.name }, {
+        $set: {
+          image: req.file.path
+        }
+      }, {
+        new: true
+      });
+      res.json({
+        status: "Success",
+        message: "Image Uploaded",
+      });
+    }
+  } catch (error) {
+    res.json(error.message)
+  }
+}

@@ -15,7 +15,6 @@ const LoadSchema = new mongoose.Schema({
     },
     image:{
         type:String,
-        required:true
     },
     carryTo:{
         type:String,
