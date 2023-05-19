@@ -82,10 +82,10 @@ export const loadEvtol = async (req, res) => {
 export const medImageUpload = async (req, res) => {
   try {
     const medToAddImg = await evload.findOne({name: req.params.name});
-    console.log(medToAddImg); // add this line to log the medToAddImg value
+    console.log(medToAddImg);
 
     if(!medToAddImg){
-      console.log('No such medication'); // add this line to log the error message
+      console.log('No such medication');
       return res.json({
         status: "Error",
         message: "No Such Medication",
@@ -100,23 +100,19 @@ export const medImageUpload = async (req, res) => {
       }, {
         new: true
       });
-
-      // update evReg state to LOADED
       const ev = await evReg.findById(medToAddImg.carrier);
-      console.log(ev); // add this line to log the ev value
-
+      console.log(ev);
       if (ev && ev.state !== "LOADED") {
         ev.state = "LOADED";
         await ev.save();
       }
-
       res.json({
         status: "Success",
         message: "Image Uploaded",
       });
     }
   } catch (error) {
-    console.log(error); // add this line to log the error
+    console.log(error);
     res.json(error.message)
   }
 }
