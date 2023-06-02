@@ -5,6 +5,10 @@ const LoadSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    email:{
+        type:String,
+        required:true
+    },
     weight:{
         type:Number,
         required:true
@@ -16,7 +20,7 @@ const LoadSchema = new mongoose.Schema({
     image:{
         type:String,
     },
-    carryTo:{
+    destination:{
         type:String,
         required:true
     },

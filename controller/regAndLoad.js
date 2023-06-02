@@ -34,7 +34,7 @@ export const evtolRegister = async (req, res) => {
 };
 
 export const loadEvtol = async (req, res) => {
-  const { name, weight, code, carryTo } = req.body;
+  const { name, email, weight, code, destination } = req.body;
   const serialNo = req.params.serialNo;
   try {
     const ev = await evReg.findOne({ serialNo });
@@ -58,9 +58,10 @@ export const loadEvtol = async (req, res) => {
     }
     const load = new evload({
       name,
+      email,
       weight,
       code,
-      carryTo,
+      destination,
       carrier: ev._id,
     });
     await load.save();
@@ -91,7 +92,6 @@ export const medImageUpload = async (req, res) => {
         message: "No Such Medication",
       });
     }
-
     if(req.file){
       await evload.findOneAndUpdate({ name: req.params.name }, {
         $set: {
@@ -117,35 +117,55 @@ export const medImageUpload = async (req, res) => {
   }
 }
 
-// export const deliverMeds = async (req, res) => {
-//   const evtolName = req.params.name;
+  export const deployEv = async (req, res) => {
+    const evtolName = req.params.name;
+    try {
+      const evtol = await evReg.findOne({ name: evtolName, state: 'LOADED' }).populate('isBooked');
+      if (!evtol) {
+        return res.status(404).json({
+          status: 'error',
+          message: `EVTOL with name ${evtolName} and state 'LOADED' not found.`,
+        });
+      }
+      evtol.state = 'DELIVERING';
+      await evtol.save();
+      const userEmail = evtol.isBooked[0].email;
+      const medName = evtol.isBooked[0].name;
+      await sendConfirmationEmail(medName, userEmail);
+      res.json({
+        status: 'success',
+        message: `EVTOL with name ${evtolName} has been marked as delivering. Confirmation email sent.`,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        status: 'error',
+        message: 'An error occurred while marking the EVTOL as delivering.',
+      });
+    }
+  };
 
-//   try {
-//     const evtol = await evReg.findOne({ name: evtolName, state: 'LOADED' });
-//     if (!evtol) {
-//       return res.status(404).json({
-//         status: 'error',
-//         message: `EVTOL with name ${evtolName} and state 'LOADED' not found.`,
-//       });
-//     }
 
-//     evtol.state = 'DELIVERING';
-//     await evtol.save();
 
-//     setTimeout(async () => {
-//       evtol.state = 'DELIVERED';
-//       await evtol.save();
-//     }, 30 * 1000);
-
-//     res.json({
-//       status: 'success',
-//       message: `EVTOL with name ${evtolName} has been marked as delivering.`,
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({
-//       status: 'error',
-//       message: 'An error occurred while marking the EVTOL as delivering.',
-//     });
-//   }
-// };
+export const sendConfirmationEmail = async (name, email) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: "ayehenz29@gmail.com",
+        pass: "xfkpqulivwwhwisc",
+      },
+    });
+    const mailOptions = {
+      from: "ayehenz29@gmail.com",
+      to: email,
+      subject: "Drone On Its Way!",
+      text: `Thank you for using our services ,\n\nThe ${name} You Requested For Is On Its Way. To track your Medication kindly use this link: http://www.linktrack.appspot.com`,
+    };
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
