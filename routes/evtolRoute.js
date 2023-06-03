@@ -19,7 +19,7 @@ evRouter.post('/deploy/:serialNo', deployEv);
 evRouter.get('/all', getAllEvtols)       
 evRouter.get('/checkMeds',getUserMedications) 
 evRouter.get('/availableEV', checkAvailableEVTOL) 
-evRouter.get('/batterylevel/:id', batteryLevel)       
+// evRouter.get('/batterylevel/:id', batteryLevel)       
 
 
 

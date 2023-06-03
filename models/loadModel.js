@@ -26,7 +26,7 @@ const LoadSchema = new mongoose.Schema({
     },
     carrier:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "evReg"
+        ref: "Reg"
     }
 })
 

@@ -1,5 +1,6 @@
 import evReg from "../models/evtolReg.js";
 import evload from "../models/loadModel.js";
+import nodemailer from "nodemailer"
 
 export const evtolRegister = async (req, res) => {
   const { serialNo, model, weight, battery, state } = req.body;
@@ -118,11 +119,11 @@ export const medImageUpload = async (req, res) => {
 }
 
   export const deployEv = async (req, res) => {
-    const evtolName = req.params.name;
+    const evtolName = req.params.serialNo;
     try {
-      const evtol = await evReg.findOne({ name: evtolName, state: 'LOADED' }).populate('isBooked');
+      const evtol = await evReg.findOne({ serialNo: evtolName, state: 'LOADED' }).populate('isBooked');
       if (!evtol) {
-        return res.status(404).json({
+        return res.status(400).json({
           status: 'error',
           message: `EVTOL with name ${evtolName} and state 'LOADED' not found.`,
         });
@@ -162,7 +163,7 @@ export const sendConfirmationEmail = async (name, email) => {
       from: "ayehenz29@gmail.com",
       to: email,
       subject: "Drone On Its Way!",
-      text: `Thank you for using our services ,\n\nThe ${name} You Requested For Is On Its Way. To track your Medication kindly use this link: http://www.linktrack.appspot.com`,
+      text: `Thank you for using our services ,\n\nThe ${name} You Requested For Is On Its Way. To track your Medication kindly use this link: https://www.linktrack.appspot.com`,
     };
     await transporter.sendMail(mailOptions);
   } catch (error) {

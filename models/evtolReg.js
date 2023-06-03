@@ -25,7 +25,7 @@
         isBooked:[
             {
                 type:mongoose.Schema.Types.ObjectId,
-                ref:"evload"  
+                ref:"Load"  
             }
         ]
     },
