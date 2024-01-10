@@ -6,18 +6,18 @@ const requestRoute = express.Router();
 
 requestRoute.post("/send-request", isLoggedIn, makeRequest);
 
-requestRoute.get("/all-requests", getAllRequests);
+requestRoute.get("/all-requests", isLoggedIn, getAllRequests);
 
-requestRoute.get("/get/:requestId", getRequestById);
+requestRoute.get("/get/:requestId", isLoggedIn, getRequestById);
 
-requestRoute.put("/accept/:requestId", acceptRequest);
+requestRoute.put("/accept/:requestId", isLoggedIn, acceptRequest);
 
-requestRoute.put("/decline/:requestId", declineRequest);
+requestRoute.put("/decline/:requestId", isLoggedIn, declineRequest);
 
-requestRoute.put("/cancel/:requestId", cancelRequest);
+requestRoute.put("/cancel/:requestId", isLoggedIn, cancelRequest);
 
-requestRoute.put("/deploy/:requestId", deployDevice);
+requestRoute.put("/deploy/:requestId", isLoggedIn, deployDevice);
 
-requestRoute.put("/delivered/:requestId", deliverRequest);
+requestRoute.put("/delivered/:requestId", isLoggedIn, deliverRequest);
 
 export default requestRoute;
