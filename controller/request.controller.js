@@ -1,6 +1,10 @@
 import Request from "../models/request.model.js";
 
 export const makeRequest = async (req, res) => {
+  const userId = req.userAuth;
+  if(!userId){
+    res.status(401).json({ error: "Unauthorized" })
+  }
     try {
       const {
         email,

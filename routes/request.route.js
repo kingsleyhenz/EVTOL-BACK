@@ -1,9 +1,10 @@
 import express from 'express';
 import { acceptRequest, cancelRequest, declineRequest, deliverRequest, getAllRequests, makeRequest, deployDevice } from './../controller/request.controller.js';
+import { isLoggedIn } from './../middleware/isLoggedIn.js';
 
 const requestRoute = express.Router();
 
-requestRoute.post("/send-request", makeRequest);
+requestRoute.post("/send-request", isLoggedIn, makeRequest);
 
 requestRoute.get("/all-requests", getAllRequests);
 

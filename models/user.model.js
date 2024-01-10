@@ -22,7 +22,15 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Request"
         }
+    ],
+    notification: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Message"
+        }
     ]
 })
 
-export default mongoose.model("User",userSchema)
+const userModel = mongoose.model("User",userSchema);
+
+export default userModel;

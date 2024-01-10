@@ -11,4 +11,5 @@ userRoute.post('/login', loginAccount);
 
 userRoute.get('/my-profile', isLoggedIn, getProfile);
 
+
 export default userRoute;

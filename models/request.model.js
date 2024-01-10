@@ -34,10 +34,6 @@ const requestSchema = new mongoose.Schema({
   requestedDate: {
     type: Date,
   },
-  expectedDeliveryDate: {
-    type: Date,
-    required: true,
-  },
   requestStatus: {
     type: String,
     enum: ['Pending', 'Accepted', 'Rejected', 'Canceled', 'In Transit', 'Delivered'],
@@ -48,7 +44,7 @@ const requestSchema = new mongoose.Schema({
   },
   deliveryDevice: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Reg"
+    ref: "Devices"
   },
 });
 
