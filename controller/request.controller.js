@@ -38,6 +38,19 @@ export const makeRequest = async (req, res) => {
     }
   };
 
+  export const getRequestById = async (req, res) => {
+    try {
+      const requestId = req.params.requestId;
+      const request = await Request.findById(id);
+      if (!request) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+      res.status(200).json(request);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
   export const acceptRequest = async (req, res) => {
     try {
       const requestId = req.params.requestId;
