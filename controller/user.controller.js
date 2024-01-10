@@ -17,7 +17,8 @@ export const createAccount = async (req, res) => {
       email,
       password: hashedPassword,
       role: "User",
-      requests: []
+      requests: [],
+      notification: [],
     });
     await newUser.save();
     res.status(201).json({ message: "Account Registered Successfully" });
