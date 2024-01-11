@@ -30,6 +30,7 @@ export const makeRequest = async (req, res) => {
 
     const volume = parcelWidth * parcelHeight * parcelLength;
     const newRequest = new Request({
+      user: userId,
       recipientName,
       recipientEmail,
       recipientPhone,
@@ -66,7 +67,7 @@ export const makeRequest = async (req, res) => {
 };
 
 export const getAllRequests = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
   }
@@ -78,14 +79,31 @@ export const getAllRequests = async (req, res) => {
   }
 };
 
+export const getMyRequests = async (req, res) => {
+  try {
+    const userId = req.userAuth._id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const user = await userModel.findById(userId).populate('requests');
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(user.requests);
+  } catch (error) {
+    console.error("Error fetching user requests:", error.message);
+    res.status(500).json({ error: "Failed to fetch requests" });
+  }
+};
+
 export const getRequestById = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
   }
   try {
     const requestId = req.params.requestId;
-    const request = await Request.findById(id);
+    const request = await Request.findById(requestId);
     if (!request) {
       return res.status(404).json({ error: "Request not found" });
     }
@@ -96,7 +114,7 @@ export const getRequestById = async (req, res) => {
 };
 
 export const acceptRequest = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
   }
@@ -123,7 +141,7 @@ export const acceptRequest = async (req, res) => {
 };
 
 export const declineRequest = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
   }
@@ -153,7 +171,7 @@ export const declineRequest = async (req, res) => {
 };
 
 export const cancelRequest = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
   }
@@ -186,7 +204,7 @@ export const cancelRequest = async (req, res) => {
 };
 
 export const deployDevice = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
   }
@@ -218,7 +236,7 @@ export const deployDevice = async (req, res) => {
 };
 
 export const deliverRequest = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
   }
