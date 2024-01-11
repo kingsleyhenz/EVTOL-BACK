@@ -3,7 +3,7 @@ import userModel from "../models/user.model.js";
 import { generateToken } from "../util/generateToken.js";
 
 export const createAccount = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { fullName, username, email, phoneNo, password } = req.body;
   try {
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
@@ -13,8 +13,10 @@ export const createAccount = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await userModel.create({
+      fullName,
       username,
       email,
+      phoneNo,
       password: hashedPassword,
       role: "User",
       requests: [],

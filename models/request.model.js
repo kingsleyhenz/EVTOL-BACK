@@ -1,28 +1,26 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const requestSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: "User",
   },
   email: {
     type: String,
     required: true,
   },
-  location: [{
-    country: {
-      type: String
-    },
-    state: {
-      type: String
-    },
-    city: {
-      type: String
-    },
-    address: {
-      type: String
-    }
-  }],
+  country: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
   phone: {
     type: String,
     required: true,
@@ -36,18 +34,25 @@ const requestSchema = new mongoose.Schema({
   },
   requestStatus: {
     type: String,
-    enum: ['Pending', 'Accepted', 'Rejected', 'Canceled', 'In Transit', 'Delivered'],
-    default: 'Pending',
+    enum: [
+      "Pending",
+      "Accepted",
+      "Rejected",
+      "Canceled",
+      "In Transit",
+      "Delivered",
+    ],
+    default: "Pending",
   },
   deliveredDate: {
     type: Date,
   },
   deliveryDevice: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Devices"
+    ref: "Devices",
   },
 });
 
-const Request = mongoose.model('Request', requestSchema);
+const Request = mongoose.model("Request", requestSchema);
 
 export default Request;

@@ -1,4 +1,5 @@
 import Request from "../models/request.model.js";
+import userModel from './../models/user.model.js';
 
 export const makeRequest = async (req, res) => {
   const userId = req.userAuth;
@@ -6,17 +7,24 @@ export const makeRequest = async (req, res) => {
     res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const { email, address, phone, item, requestedDate, expectedDeliveryDate } =
+    const { email, address, phone, item, expectedDeliveryDate } =
       req.body;
     const newRequest = new Request({
       email,
       address,
       phone,
       item,
-      requestedDate,
+      requestedDate: new Date(),
       expectedDeliveryDate,
     });
     await newRequest.save();
+    const notificationId = await createNotification(newRequest._id);
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.notification.push(notificationId);
+    await user.save();
     res.status(201).json(newRequest);
   } catch (error) {
     res.status(500).json({ error: error.message });
