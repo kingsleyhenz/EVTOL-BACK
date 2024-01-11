@@ -5,29 +5,61 @@ const requestSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  email: {
+  recipientName:{
     type: String,
     required: true,
   },
-  country: {
-    type: String,
-  },
-  state: {
-    type: String,
-  },
-  city: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
-  phone: {
+  recipientEmail: {
     type: String,
     required: true,
+  },
+  recipientPhone: {
+    type: String,
+    required: true,
+  },
+  parcelCountry: {
+    type: String,
+  },
+  parcelState: {
+    type: String,
+  },
+  parcelCity: {
+    type: String,
+  },
+  parcelAddress: {
+    type: String,
+  },
+  parcelWidth: {
+    type: Number,
+  },
+  parcelHeight: {
+    type: Number,
+  },
+  parcelLength: {
+    type: Number,
+  },
+  parcelWeight: {
+    type: Number
+  },
+  recipientCountry: {
+    type: String,
+  },
+  recipientState: {
+    type: String,
+  },
+  recipientCity: {
+    type: String,
+  },
+  recipientaddress: {
+    type: String,
   },
   item: {
     type: String,
     required: true,
+  },
+  description: {
+    type: String,
+    required: true
   },
   requestedDate: {
     type: Date,
@@ -50,7 +82,7 @@ const requestSchema = new mongoose.Schema({
   deliveryDevice: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Devices",
-  },
+  }
 });
 
 const Request = mongoose.model("Request", requestSchema);

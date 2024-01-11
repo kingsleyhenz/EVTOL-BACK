@@ -1,32 +1,66 @@
 import Request from "../models/request.model.js";
-import userModel from './../models/user.model.js';
+import userModel from "./../models/user.model.js";
+import { requestSent } from "./notification.controller.js";
 
 export const makeRequest = async (req, res) => {
-  const userId = req.userAuth;
+  const userId = req.userAuth._id;
   if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "Unauthorized" });
   }
+
   try {
-    const { email, address, phone, item, expectedDeliveryDate } =
-      req.body;
-    const newRequest = new Request({
-      email,
-      address,
-      phone,
+    const {
+      recipientName,
+      recipientEmail,
+      recipientPhone,
+      parcelCountry,
+      parcelState,
+      parcelCity,
+      parcelAddress,
+      recipientCountry,
+      recipientState,
+      recipientCity,
+      recipientAddress,
+      parcelWidth,
+      parcelHeight,
+      parcelLength,
       item,
+      description
+    } = req.body;
+
+    const volume = parcelWidth * parcelHeight * parcelLength;
+    const newRequest = new Request({
+      recipientName,
+      recipientEmail,
+      recipientPhone,
+      parcelCountry,
+      parcelState,
+      parcelCity,
+      parcelAddress,
+      recipientCountry,
+      recipientState,
+      recipientCity,
+      recipientAddress,
+      item,
+      parcelWidth,
+      parcelHeight,
+      parcelLength,
+      parcelWeight: volume * 0.01,
       requestedDate: new Date(),
-      expectedDeliveryDate,
+      description
     });
     await newRequest.save();
-    const notificationId = await createNotification(newRequest._id);
+    const notificationId = await requestSent(newRequest._id);
     const user = await userModel.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+    user.requests.push(newRequest._id);
     user.notification.push(notificationId);
     await user.save();
     res.status(201).json(newRequest);
   } catch (error) {
+    console.error("Error in makeRequest:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -46,8 +80,8 @@ export const getAllRequests = async (req, res) => {
 
 export const getRequestById = async (req, res) => {
   const userId = req.userAuth;
-  if(!userId){
-    res.status(401).json({ error: "Unauthorized" })
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
   }
   try {
     const requestId = req.params.requestId;
@@ -63,8 +97,8 @@ export const getRequestById = async (req, res) => {
 
 export const acceptRequest = async (req, res) => {
   const userId = req.userAuth;
-  if(!userId){
-    res.status(401).json({ error: "Unauthorized" })
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
   }
   try {
     const requestId = req.params.requestId;
@@ -90,8 +124,8 @@ export const acceptRequest = async (req, res) => {
 
 export const declineRequest = async (req, res) => {
   const userId = req.userAuth;
-  if(!userId){
-    res.status(401).json({ error: "Unauthorized" })
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
   }
   try {
     const requestId = req.params.requestId;
@@ -120,8 +154,8 @@ export const declineRequest = async (req, res) => {
 
 export const cancelRequest = async (req, res) => {
   const userId = req.userAuth;
-  if(!userId){
-    res.status(401).json({ error: "Unauthorized" })
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
   }
   try {
     const requestId = req.params.requestId;
@@ -153,8 +187,8 @@ export const cancelRequest = async (req, res) => {
 
 export const deployDevice = async (req, res) => {
   const userId = req.userAuth;
-  if(!userId){
-    res.status(401).json({ error: "Unauthorized" })
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
   }
   try {
     const { requestId } = req.params;
@@ -185,8 +219,8 @@ export const deployDevice = async (req, res) => {
 
 export const deliverRequest = async (req, res) => {
   const userId = req.userAuth;
-  if(!userId){
-    res.status(401).json({ error: "Unauthorized" })
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
   }
   try {
     const { requestId } = req.params;

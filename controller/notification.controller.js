@@ -1,4 +1,4 @@
-import Messages from './../models/notification.model';
+import Messages from './../models/notification.model.js';
 
 export const requestSent = async(requestId)=>{
     try {
