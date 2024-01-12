@@ -51,6 +51,7 @@ export const getNotificationById = async (req, res) => {
     if (!notification) {
       return res.status(404).json({ error: "Notification not found" });
     }
+    await Messages.findByIdAndUpdate(notificationId, { status: "Read" });
     res.status(200).json(notification);
   } catch (error) {
     console.error("Error fetching notification:", error.message);
