@@ -32,3 +32,28 @@ export const getMyNotifications = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 };
+
+export const getNotificationById = async (req, res) => {
+  try {
+    const userId = req.userAuth._id;  
+    const notificationId = req.params.notificationId;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const user = await userModel.findById(userId).populate('notification');
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const notification = user.notification.find(
+      (notif) => notif._id.toString() === notificationId
+    );
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+    res.status(200).json(notification);
+  } catch (error) {
+    console.error("Error fetching notification:", error.message);
+    res.status(500).json({ error: "Failed to fetch notification" });
+  }
+}
