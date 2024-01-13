@@ -46,6 +46,21 @@ export const requestAccepted = async(requestId)=>{
       }
   }
 
+  export const requestDeclineDueToUnavailabilty = async(requestId)=>{
+    try {
+        const newMessage = new Messages({
+          title: "Request Declined",
+          body: `Sorry but your request with ID ${requestId} has been declined due to lack available devices`,
+          status: "Unread"
+        });
+        const savedMessage = await newMessage.save();
+        return savedMessage._id;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to create notification");
+      }
+  }
+
 export const getMyNotifications = async (req, res) => {
   try {
     const userId = req.userAuth._id;

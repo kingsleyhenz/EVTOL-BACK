@@ -1,6 +1,6 @@
 import Request from "../models/request.model.js";
 import userModel from "./../models/user.model.js";
-import { requestAccepted, requestDeclineDueToWeight, requestSent } from "./notification.controller.js";
+import { requestAccepted, requestDeclineDueToUnavailabilty, requestDeclineDueToWeight, requestSent } from "./notification.controller.js";
 
 export const makeRequest = async (req, res) => {
   const userId = req.userAuth._id;
@@ -185,6 +185,45 @@ export const declineRequestDueToWeight = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const declineRequestDueToUnavailability = async (req, res) => {
+  const userId = req.userAuth._id;
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+  try {
+    const requestId = req.params.requestId;
+    const declinedRequest = await Request.findById(requestId);
+    if (!declinedRequest) {
+      return res.status(404).json({ error: "Request not found" });
+    }
+    if (declinedRequest.requestStatus === "Rejected") {
+      return res
+        .status(400)
+        .json({ error: "Request has already been rejected." });
+    }
+    if (declinedRequest.requestStatus !== "Pending") {
+      return res.status(400).json({ error: "Unable to reject request." });
+    }
+    const updatedRequest = await Request.findByIdAndUpdate(
+      requestId,
+      { requestStatus: "Rejected" },
+      { new: true }
+    );
+    const notificationId = await requestDeclineDueToUnavailabilty(requestId);
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.notification.push(notificationId);
+    await user.save();
+    res.status(200).json(updatedRequest);
+  } catch (error) {
+    console.error("Error declining request:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 export const cancelRequest = async (req, res) => {
   const userId = req.userAuth._id;
