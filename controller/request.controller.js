@@ -1,6 +1,6 @@
 import Request from "../models/request.model.js";
 import userModel from "./../models/user.model.js";
-import { requestSent } from "./notification.controller.js";
+import { requestAccepted, requestSent } from "./notification.controller.js";
 
 export const makeRequest = async (req, res) => {
   const userId = req.userAuth._id;
@@ -134,8 +134,16 @@ export const acceptRequest = async (req, res) => {
       { requestStatus: "Accepted" },
       { new: true }
     );
+    const notificationId = await requestAccepted(requestId);
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.notification.push(notificationId);
+    await user.save();
     res.status(200).json(acceptedRequest);
   } catch (error) {
+    console.error("Error accepting request:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
