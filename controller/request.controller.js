@@ -1,6 +1,7 @@
 import Request from "../models/request.model.js";
 import userModel from "./../models/user.model.js";
-import { requestAccepted, requestDeclineDueToUnavailabilty, requestDeclineDueToWeight, requestSent } from "./notification.controller.js";
+import { requestAccepted, requestDeclineDueToUnavailabilty, requestDeclineDueToWeight, requestDelivered, requestSent } from "./notification.controller.js";
+import Devices from './../models/device.model.js';
 
 export const makeRequest = async (req, res) => {
   const userId = req.userAuth._id;
@@ -296,7 +297,7 @@ export const deliverRequest = async (req, res) => {
     res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const { requestId } = req.params;
+    const requestId  = req.params.requestId;
     const existingRequest = await Request.findById(requestId);
     if (!existingRequest) {
       return res.status(404).json({ error: "Request not found" });
@@ -315,13 +316,23 @@ export const deliverRequest = async (req, res) => {
       { requestStatus: "Delivered", deliveredDate: new Date() },
       { new: true }
     );
-    const deliveryDeviceUpdate = await DeviceReg.findOneAndUpdate(
+    const deliveryDeviceUpdate = await Devices.findOneAndUpdate(
       { serialNo: deliveryDevice },
       { $push: { deliveries: requestId } },
       { new: true }
-    );
+    );  
+    const notificationId = await requestDelivered(requestId);
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.notification.push(notificationId);
+    await user.save();
+
     res.status(200).json({ updatedRequest, deliveryDeviceUpdate });
   } catch (error) {
+    console.error("Error delivering request:", error.message);
     res.status(500).json({ error: error.message });
   }
 };

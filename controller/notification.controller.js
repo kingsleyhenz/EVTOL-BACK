@@ -61,6 +61,21 @@ export const requestAccepted = async(requestId)=>{
       }
   }
 
+  export const requestDelivered = async(requestId)=>{
+    try {
+        const newMessage = new Messages({
+          title: "Request Delivered",
+          body: `Your request with ID ${requestId} has been delivered successfully, please ensure to leave a good review`,
+          status: "Unread"
+        });
+        const savedMessage = await newMessage.save();
+        return savedMessage._id;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to create notification");
+      }
+  }
+
 export const getMyNotifications = async (req, res) => {
   try {
     const userId = req.userAuth._id;
