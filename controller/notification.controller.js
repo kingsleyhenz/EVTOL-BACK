@@ -16,6 +16,21 @@ export const requestSent = async(requestId)=>{
       }
 }
 
+export const requestAccepted = async(requestId)=>{
+  try {
+      const newMessage = new Messages({
+        title: "Request Accepted",
+        body: `Your request with ID ${requestId} has been accepted, your parcel will be picked up and deployed shortly`,
+        status: "Unread"
+      });
+      const savedMessage = await newMessage.save();
+      return savedMessage._id;
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to create notification" });
+    }
+}
+
 export const getMyNotifications = async (req, res) => {
   try {
     const userId = req.userAuth._id;
