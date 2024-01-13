@@ -1,5 +1,5 @@
 import express from 'express';
-import { acceptRequest, cancelRequest, declineRequest, deliverRequest, getAllRequests, makeRequest, deployDevice, getRequestById, getMyRequests } from './../controller/request.controller.js';
+import { acceptRequest, cancelRequest, deliverRequest, getAllRequests, makeRequest, deployDevice, getRequestById, getMyRequests, declineRequestDueToWeight } from './../controller/request.controller.js';
 import { isLoggedIn } from './../middleware/isLoggedIn.js';
 
 const requestRoute = express.Router();
@@ -14,7 +14,7 @@ requestRoute.get("/my-requests", isLoggedIn, getMyRequests)
 
 requestRoute.put("/accept/:requestId", isLoggedIn, acceptRequest);
 
-requestRoute.put("/decline/:requestId", isLoggedIn, declineRequest);
+requestRoute.put("/decline/:requestId", isLoggedIn, declineRequestDueToWeight);
 
 requestRoute.put("/cancel/:requestId", isLoggedIn, cancelRequest);
 

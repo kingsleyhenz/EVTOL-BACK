@@ -1,6 +1,6 @@
 import Request from "../models/request.model.js";
 import userModel from "./../models/user.model.js";
-import { requestAccepted, requestSent } from "./notification.controller.js";
+import { requestAccepted, requestDeclineDueToWeight, requestSent } from "./notification.controller.js";
 
 export const makeRequest = async (req, res) => {
   const userId = req.userAuth._id;
@@ -148,7 +148,7 @@ export const acceptRequest = async (req, res) => {
   }
 };
 
-export const declineRequest = async (req, res) => {
+export const declineRequestDueToWeight = async (req, res) => {
   const userId = req.userAuth._id;
   if (!userId) {
     res.status(401).json({ error: "Unauthorized" });
@@ -172,8 +172,16 @@ export const declineRequest = async (req, res) => {
       { requestStatus: "Rejected" },
       { new: true }
     );
+    const notificationId = await requestDeclineDueToWeight(requestId);
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.notification.push(notificationId);
+    await user.save();
     res.status(200).json(updatedRequest);
   } catch (error) {
+    console.error("Error declining request:", error.message);
     res.status(500).json({ error: error.message });
   }
 };

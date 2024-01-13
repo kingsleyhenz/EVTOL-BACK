@@ -12,7 +12,7 @@ export const requestSent = async(requestId)=>{
         return savedMessage._id;
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Failed to create notification" });
+        throw new Error("Failed to create notification");
       }
 }
 
@@ -27,24 +27,24 @@ export const requestAccepted = async(requestId)=>{
       return savedMessage._id;
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Failed to create notification" });
+      throw new Error("Failed to create notification");
     }
 }
 
-export const requestDecline = async(requestId)=>{
-  try {
-      const newMessage = new Messages({
-        title: "Request Declined",
-        body: `Sorry but your request with ID ${requestId} has been declined because the weight of your parcel exceeds the highest available weight for our drone devices`,
-        status: "Unread"
-      });
-      const savedMessage = await newMessage.save();
-      return savedMessage._id;
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Failed to create notification" });
-    }
-}
+  export const requestDeclineDueToWeight = async(requestId)=>{
+    try {
+        const newMessage = new Messages({
+          title: "Request Declined",
+          body: `Sorry but your request with ID ${requestId} has been declined because the weight of your parcel exceeds the highest available weight for our drone devices`,
+          status: "Unread"
+        });
+        const savedMessage = await newMessage.save();
+        return savedMessage._id;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to create notification");
+      }
+  }
 
 export const getMyNotifications = async (req, res) => {
   try {
