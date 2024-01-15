@@ -68,3 +68,22 @@ export const declineRequest = async(req,res)=>{
         }
 }
 
+export const cancelRequest = async (req, res) => {
+    try {
+      const { requestId } = req.params;
+      const existingRequest = await Request.findById(requestId);
+      if (!existingRequest) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+      if (existingRequest.requestStatus === 'Delivered' || existingRequest.requestStatus === 'Rejected') {
+        return res.status(400).json({ error: 'Unable to cancel request.' });
+      }
+      const canceledRequest = await Request.findByIdAndUpdate(
+        requestId, 
+        { requestStatus: 'Canceled' }, 
+        { new: true });
+      res.status(200).json(canceledRequest);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
