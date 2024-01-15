@@ -22,10 +22,14 @@
             enum: ["IDLE", "LOADING","LOADED", "DELIVERING", "DELIVERED", "RETURNING"],
             default: "IDLE",
         },
-        isBooked:[
-            {
+        isBooked:{
                 type:mongoose.Schema.Types.ObjectId,
                 ref:"Request"  
+        },
+        deliveries: [
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Request"
             }
         ]
     },
