@@ -36,7 +36,11 @@ const requestSchema = new mongoose.Schema({
   deliveredDate: {
     type: Date,
   },
-  
+  deliveryDevice: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'DevieReg',
+    required: true,
+  },
 });
 
 const Request = mongoose.model('Request', requestSchema);
