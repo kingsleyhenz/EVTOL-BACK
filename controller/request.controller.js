@@ -51,3 +51,20 @@ export const makeRequest = async (req, res) => {
     }
   };
 
+export const declineRequest = async(req,res)=>{
+    try {
+        const requestId = req.params.requestId
+        const declinedRequest = await Request.findByIdAndUpdate(
+            requestId,
+            {requestStatus: 'Rejected'},
+            {new: true}
+        );
+        if(!declinedRequest){
+            return res.status(404).json({ error: 'Request not found' });
+          }
+          res.status(200).json(acceptedRequest);
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+}
+
