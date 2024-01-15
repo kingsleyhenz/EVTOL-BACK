@@ -25,7 +25,7 @@
         isBooked:[
             {
                 type:mongoose.Schema.Types.ObjectId,
-                ref:"Load"  
+                ref:"Request"  
             }
         ]
     },
@@ -35,6 +35,6 @@
     }
     )
 
-    const evReg = mongoose.model('Reg',RegSchema);
+    const DevieReg = mongoose.model('Reg',RegSchema);
 
-    export default evReg;
+    export default DevieReg;

@@ -2,7 +2,7 @@ import express  from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import {connectDB} from './config/dbConnect.js'
-import evRouter from "./routes/evtolRoute.js";
+import evRouter from './routes/device.route.js';
 dotenv.config();
 connectDB();
 const app = express()
