@@ -10,9 +10,7 @@ export const makeRequest = async (req, res) => {
         item,
         requestedDate,
         expectedDeliveryDate,
-        deliveryDevice,
       } = req.body;
-  
       const newRequest = new Request({
         recipientName,
         email,
@@ -21,7 +19,6 @@ export const makeRequest = async (req, res) => {
         item,
         requestedDate,
         expectedDeliveryDate,
-        deliveryDevice,
       });
       await newRequest.save();
       res.status(201).json(newRequest);
@@ -77,7 +74,7 @@ export const makeRequest = async (req, res) => {
   
   export const cancelRequest = async (req, res) => {
     try {
-      const { requestId } = req.params;
+      const { requestId } = req.params.requestId;
       const existingRequest = await Request.findById(requestId);
       if (!existingRequest) {
         return res.status(404).json({ error: 'Request not found' });
@@ -94,6 +91,30 @@ export const makeRequest = async (req, res) => {
         { new: true }
       );
       res.status(200).json(canceledRequest);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+  export const deliverRequest = async (req, res) => {
+    try {
+      const { requestId } = req.params.requestId;
+      const existingRequest = await Request.findById(requestId);
+      if (!existingRequest) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+      if (existingRequest.requestStatus === 'Delivered') {
+        return res.status(400).json({ error: 'Request has already been delivered.' });
+      }
+      if (existingRequest.requestStatus !== 'In Transit') {
+        return res.status(400).json({ error: 'Request is not in transit.' });
+      }
+      const updatedRequest = await Request.findByIdAndUpdate(
+        requestId,
+        { requestStatus: 'Delivered', deliveredDate: new Date() },
+        { new: true }
+      );
+      res.status(200).json(updatedRequest);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
