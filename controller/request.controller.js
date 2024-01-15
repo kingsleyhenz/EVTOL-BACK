@@ -51,24 +51,31 @@ export const makeRequest = async (req, res) => {
     }
   };
 
-export const declineRequest = async(req,res)=>{
+  export const declineRequest = async (req, res) => {
     try {
-        const requestId = req.params.requestId
-        const declinedRequest = await Request.findByIdAndUpdate(
-            requestId,
-            {requestStatus: 'Rejected'},
-            {new: true}
-        );
-        if(!declinedRequest){
-            return res.status(404).json({ error: 'Request not found' });
-          }
-          res.status(200).json(acceptedRequest);
-        } catch (error) {
-          res.status(500).json({ error: error.message });
-        }
-}
-
-export const cancelRequest = async (req, res) => {
+      const requestId = req.params.requestId;
+      const declinedRequest = await Request.findById(requestId);
+      if (!declinedRequest) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+      if (declinedRequest.requestStatus === 'Rejected') {
+        return res.status(400).json({ error: 'Request has already been rejected.' });
+      }
+      if (declinedRequest.requestStatus !== 'Pending' || declinedRequest.requestStatus !== 'Rejected') {
+        return res.status(400).json({ error: 'Unable to reject request.' });
+      }
+      const updatedRequest = await Request.findByIdAndUpdate(
+        requestId,
+        { requestStatus: 'Rejected' },
+        { new: true }
+      );
+      res.status(200).json(updatedRequest);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+  export const cancelRequest = async (req, res) => {
     try {
       const { requestId } = req.params;
       const existingRequest = await Request.findById(requestId);
@@ -78,12 +85,18 @@ export const cancelRequest = async (req, res) => {
       if (existingRequest.requestStatus === 'Delivered' || existingRequest.requestStatus === 'Rejected') {
         return res.status(400).json({ error: 'Unable to cancel request.' });
       }
+      if (existingRequest.requestStatus === 'Canceled') {
+        return res.status(400).json({ error: 'Request has already been canceled.' });
+      }
       const canceledRequest = await Request.findByIdAndUpdate(
-        requestId, 
-        { requestStatus: 'Canceled' }, 
-        { new: true });
+        requestId,
+        { requestStatus: 'Canceled' },
+        { new: true }
+      );
       res.status(200).json(canceledRequest);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   };
+  
+
