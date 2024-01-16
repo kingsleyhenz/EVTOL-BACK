@@ -27,6 +27,15 @@ export const makeRequest = async (req, res) => {
     }
   };
 
+  export const getAllRequests = async(req, res) => {
+    try {
+      const allRequests = await Request.find();
+      res.status(200).json(allRequests);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
   export const acceptRequest = async (req, res) => {
     try {
       const requestId = req.params.requestId;
@@ -58,7 +67,7 @@ export const makeRequest = async (req, res) => {
       if (declinedRequest.requestStatus === 'Rejected') {
         return res.status(400).json({ error: 'Request has already been rejected.' });
       }
-      if (declinedRequest.requestStatus !== 'Pending' || declinedRequest.requestStatus !== 'Rejected') {
+      if (declinedRequest.requestStatus !== 'Pending') {
         return res.status(400).json({ error: 'Unable to reject request.' });
       }
       const updatedRequest = await Request.findByIdAndUpdate(
@@ -74,7 +83,7 @@ export const makeRequest = async (req, res) => {
   
   export const cancelRequest = async (req, res) => {
     try {
-      const { requestId } = req.params.requestId;
+      const requestId = req.params.requestId;
       const existingRequest = await Request.findById(requestId);
       if (!existingRequest) {
         return res.status(404).json({ error: 'Request not found' });
@@ -96,9 +105,37 @@ export const makeRequest = async (req, res) => {
     }
   };
   
+  export const deployDevice = async (req,res)=>{
+    try {
+      const { requestId } = req.params;
+      const { deliveryDevice } = req.body;
+      if (!deliveryDevice) {
+        return res.status(400).json({ error: 'Delivery device is required' });
+      }
+      const existingRequest = await Request.findById(requestId);
+      if (!existingRequest) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+      if (existingRequest.request !== 'Accepted') {
+        return res.status(400).json({ error: 'Request cannot be deployed' });
+      }
+      const updatedRequest = await Request.findByIdAndUpdate(
+        requestId,
+        {
+          requestStatus: 'In Transit',
+          deliveryDevice: deliveryDevice,
+        },
+        { new: true }
+      );
+      res.status(200).json(updatedRequest);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   export const deliverRequest = async (req, res) => {
     try {
-      const { requestId } = req.params.requestId;
+      const { requestId } = req.params;
       const existingRequest = await Request.findById(requestId);
       if (!existingRequest) {
         return res.status(404).json({ error: 'Request not found' });
@@ -109,12 +146,18 @@ export const makeRequest = async (req, res) => {
       if (existingRequest.requestStatus !== 'In Transit') {
         return res.status(400).json({ error: 'Request is not in transit.' });
       }
+      const { deliveryDevice } = existingRequest;
       const updatedRequest = await Request.findByIdAndUpdate(
         requestId,
         { requestStatus: 'Delivered', deliveredDate: new Date() },
         { new: true }
       );
-      res.status(200).json(updatedRequest);
+      const deliveryDeviceUpdate = await DeviceReg.findOneAndUpdate(
+        { serialNo: deliveryDevice },
+        { $push: { deliveries: requestId } },
+        { new: true }
+      );
+      res.status(200).json({ updatedRequest, deliveryDeviceUpdate });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

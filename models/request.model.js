@@ -37,9 +37,7 @@ const requestSchema = new mongoose.Schema({
     type: Date,
   },
   deliveryDevice: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'DevieReg',
-    required: true,
+    type: String,
   },
 });
 
