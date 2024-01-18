@@ -30,29 +30,30 @@ export const createAccount = async (req, res) => {
   }
 };
 
-export const loginAccount = async(req,res)=>{
+export const loginAccount = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const existingUser = await userModel.findOne({ email })
-    if(!existingUser){
-      return res.status(400).json({ message: "User not registered" })
+    const existingUser = await userModel.findOne({ email });
+    if (!existingUser) {
+      return res.status(400).json({ message: "User not registered" });
     }
-    const validPassword = await bcrypt.compare(password, existingUser.password)
-    if(!validPassword){
-      res.status(400).json({ message: "Invalid Credentials" })
+
+    const validPassword = await bcrypt.compare(password, existingUser.password);
+    if (!validPassword) {
+      return res.status(400).json({ message: "Invalid Credentials" });
     }
     const token = generateToken(existingUser);
     res.json({
       status: "Success",
       token,
-      role: existingUser.role
-    })
+      role: existingUser.role,
+    });
   } catch (error) {
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: "Error",
       message: "Failed to login",
-    });    
+    });
   }
 };
 
