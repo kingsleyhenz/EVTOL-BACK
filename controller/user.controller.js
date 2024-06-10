@@ -51,4 +51,24 @@ export const loginAccount = async(req,res)=>{
       message: "Failed to login",
     });    
   }
+};
+
+export const getProfile = async(req, res)=>{
+  const userId = req.userAuth;
+  if(!userId){
+    return res.status(401).json({ error: "Unauthorized" })
+  }
+  try {
+    const user = await userModel.findById(userId)
+    if(!user){
+      return res.status(400).json({ message: "User Not Found" })
+    }
+    res.json({
+      status: "Success",
+      data: user
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "Internal Server Error" })
+  }
 }
