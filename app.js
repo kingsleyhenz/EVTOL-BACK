@@ -4,6 +4,7 @@ import cors from "cors";
 import {connectDB} from './config/dbConnect.js'
 import evRouter from './routes/device.route.js';
 import requestRoute from "./routes/request.route.js";
+import userRoute from "./routes/user.route.js";
 dotenv.config();
 connectDB();
 const app = express()
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/evtol/admin", evRouter);
 app.use("/api/v1/request", requestRoute);
+app.use("api/v1/user", userRoute);
 
 const PORT = process.env.PORT || 4000
 app.listen(PORT, () => {

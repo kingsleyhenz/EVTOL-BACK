@@ -4,11 +4,17 @@ import { acceptRequest, cancelRequest, declineRequest, deliverRequest, getAllReq
 const requestRoute = express.Router();
 
 requestRoute.post("/send-request", makeRequest);
+
 requestRoute.get("/all-requests", getAllRequests);
+
 requestRoute.put("/accept/:requestId", acceptRequest);
+
 requestRoute.put("/decline/:requestId", declineRequest);
+
 requestRoute.put("/cancel/:requestId", cancelRequest);
-requestRoute.put("deploy/:requestId", deployDevice)
+
+requestRoute.put("/deploy/:requestId", deployDevice);
+
 requestRoute.put("/delivered/:requestId", deliverRequest);
 
 export default requestRoute;

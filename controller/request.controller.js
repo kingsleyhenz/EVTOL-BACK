@@ -3,7 +3,6 @@ import Request from "../models/request.model.js";
 export const makeRequest = async (req, res) => {
     try {
       const {
-        recipientName,
         email,
         address,
         phone,
@@ -12,7 +11,6 @@ export const makeRequest = async (req, res) => {
         expectedDeliveryDate,
       } = req.body;
       const newRequest = new Request({
-        recipientName,
         email,
         address,
         phone,

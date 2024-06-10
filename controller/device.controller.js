@@ -1,12 +1,12 @@
-import DevieReg from "../models/device.model.js";
 import nodemailer from 'nodemailer';
+import Devices from './../models/device.model.js';
 
 export const evtolRegister = async (req, res) => {
   const { serialNo, model, weight, battery, state } = req.body;
   try {
-    const presentEvtol = await DevieReg.findOne({ serialNo });
+    const presentEvtol = await Devices.findOne({ serialNo });
     if (!presentEvtol) {
-      const evtol = DevieReg.create({
+      const evtol = Devices.create({
         serialNo,
         model,
         weight,
@@ -35,7 +35,7 @@ export const evtolRegister = async (req, res) => {
 
 export const getAllEvtols = async (req, res) => {
   try {
-    const evtols = await DevieReg.find({});
+    const evtols = await Devices.find({});
     res.json({
       status: "Success",
       data: evtols,
@@ -52,7 +52,7 @@ export const getAllEvtols = async (req, res) => {
 
 export const checkAvailableEVTOL = async (req, res) => {
   try {
-    const availableEVTOL = await DevieReg.find({ state: "IDLE" });
+    const availableEVTOL = await Devices.find({ state: "IDLE" });
     if (!availableEVTOL) {
       return res.json({
         status:"Failed",

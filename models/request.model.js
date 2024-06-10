@@ -1,18 +1,28 @@
 import mongoose from 'mongoose';
 
 const requestSchema = new mongoose.Schema({
-  recipientName: {
-    type: String,
-    required: true,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   email: {
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
+  location: [{
+    country: {
+      type: String
+    },
+    state: {
+      type: String
+    },
+    city: {
+      type: String
+    },
+    address: {
+      type: String
+    }
+  }],
   phone: {
     type: String,
     required: true,
@@ -37,7 +47,8 @@ const requestSchema = new mongoose.Schema({
     type: Date,
   },
   deliveryDevice: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Reg"
   },
 });
 

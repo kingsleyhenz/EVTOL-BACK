@@ -1,6 +1,6 @@
     import mongoose from 'mongoose';
 
-    const RegSchema = new mongoose.Schema({
+    const DeviceSchema = new mongoose.Schema({
         serialNo:{
             type:String,
             required:true
@@ -39,6 +39,6 @@
     }
     )
 
-    const DevieReg = mongoose.model('Reg',RegSchema);
+    const Devices = mongoose.model('Devices', DeviceSchema);
 
-    export default DevieReg;
+    export default Devices;
