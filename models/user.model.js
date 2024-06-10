@@ -16,7 +16,13 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: ["User", "Admin"]
-    }
+    },
+    requests: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Request"
+        }
+    ]
 })
 
 export default mongoose.model("User",userSchema)

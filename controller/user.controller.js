@@ -16,6 +16,8 @@ export const createAccount = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: "User",
+      requests: []
     });
     await newUser.save();
     res.status(201).json({ message: "Account Registered Successfully" });
@@ -24,3 +26,29 @@ export const createAccount = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const loginAccount = async(req,res)=>{
+  const { email, password } = req.body;
+  try {
+    const existingUser = await userModel.findOne({ email })
+    if(!existingUser){
+      return res.status(400).json({ message: "User not registered" })
+    }
+    const validPassword = await bcrypt.compare(password, existingUser.password)
+    if(!validPassword){
+      res.status(400).json({ message: "Invalid Credentials" })
+    }
+    const token = generateToken(existingUser);
+    res.json({
+      status: "Success",
+      token,
+      role: existingUser.role
+    })
+  } catch (error) {
+    console.error(error);
+    res.json({
+      status: "Error",
+      message: "Failed to login",
+    });    
+  }
+}
