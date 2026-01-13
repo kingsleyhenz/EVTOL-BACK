@@ -1,4 +1,4 @@
-import { DeviceState } from '../typings/enums';
+import { DeviceState } from '../typings/enums.ts';
 
 export interface CreateDeviceDto {
   serialNo: string;
