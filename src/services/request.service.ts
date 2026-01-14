@@ -21,6 +21,13 @@ class RequestService {
   async getUserRequests(userId: string) {
     return await Request.find({ user: userId });
   }
+
+  async assignDevice(requestId: string, deviceId: string) {
+    return await Request.findByIdAndUpdate(requestId, { 
+      deliveryDevice: deviceId, 
+      requestStatus: 'Accepted' 
+    }, { new: true });
+  }
 }
 
 export default new RequestService();
