@@ -21,6 +21,15 @@ class DeviceService {
   async deleteDevice(id: string) {
     return await Devices.findByIdAndDelete(id);
   }
+
+  async findAvailableDevices() {
+    return await Devices.find({ state: 'IDLE', battery: { $gt: 25 } });
+  }
+
+  async checkBattery(id: string) {
+    const device = await Devices.findById(id);
+    return device ? device.battery : 0;
+  }
 }
 
 export default new DeviceService();
