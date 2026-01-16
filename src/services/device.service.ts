@@ -1,7 +1,7 @@
 import Devices from '../models/device.model.js';
 import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto';
 
-class DeviceService {
+export class DeviceService {
   async createDevice(data: CreateDeviceDto) {
     return await Devices.create(data);
   }
