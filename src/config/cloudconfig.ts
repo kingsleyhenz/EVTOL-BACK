@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 const storage = new CloudinaryStorage({
-    cloudinary: cloudinary as any,
+    cloudinary: cloudinary,
     params: {
         folder: "EVTOL MEDICATIONS",
         allowed_formats: ["jpg", "png", "gif", "jpeg"],
