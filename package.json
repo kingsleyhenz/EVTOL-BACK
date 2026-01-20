@@ -5,7 +5,9 @@
   "description": "Transportation",
   "type": "module",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node dist/app.js",
+    "dev": "nodemon src/app.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
