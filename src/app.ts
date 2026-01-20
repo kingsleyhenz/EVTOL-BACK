@@ -5,7 +5,7 @@ import { connectDB } from './config/dbConnect.js';
 import evRouter from './routes/device.route.js';
 import requestRoute from "./routes/request.route.js";
 import userRoute from "./routes/user.route.js";
-import messageRoute from "./routes/notification.route..js";
+import messageRoute from "./routes/notification.route.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
 dotenv.config();
