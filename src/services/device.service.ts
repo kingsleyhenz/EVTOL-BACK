@@ -1,33 +1,35 @@
-import Devices from '../models/device.model.js';
-import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto';
+import Device, { IDevice } from '../models/device.model.js';
+import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.js';
+import { DeviceState } from '../typings/enums.js';
 
-export class DeviceService {
-  async createDevice(data: CreateDeviceDto) {
-    return await Devices.create(data);
+class DeviceService {
+  async createDevice(data: CreateDeviceDto): Promise<IDevice> {
+    const device = new Device(data);
+    return await device.save();
   }
 
-  async getAllDevices() {
-    return await Devices.find();
+  async getAllDevices(): Promise<IDevice[]> {
+    return await Device.find().exec();
   }
 
-  async getDeviceById(id: string) {
-    return await Devices.findById(id);
+  async getDeviceById(id: string): Promise<IDevice | null> {
+    return await Device.findById(id).exec();
   }
 
-  async updateDevice(id: string, data: UpdateDeviceDto) {
-    return await Devices.findByIdAndUpdate(id, data, { new: true });
+  async updateDevice(id: string, data: UpdateDeviceDto): Promise<IDevice | null> {
+    return await Device.findByIdAndUpdate(id, data, { new: true }).exec();
   }
 
-  async deleteDevice(id: string) {
-    return await Devices.findByIdAndDelete(id);
+  async deleteDevice(id: string): Promise<IDevice | null> {
+    return await Device.findByIdAndDelete(id).exec();
   }
 
-  async findAvailableDevices() {
-    return await Devices.find({ state: 'IDLE', battery: { $gt: 25 } });
+  async findAvailableDevices(): Promise<IDevice[]> {
+    return await Device.find({ state: DeviceState.IDLE, battery: { $gt: 25 } }).exec();
   }
 
-  async checkBattery(id: string) {
-    const device = await Devices.findById(id);
+  async checkBattery(id: string): Promise<number> {
+    const device = await Device.findById(id).exec();
     return device ? device.battery : 0;
   }
 }
