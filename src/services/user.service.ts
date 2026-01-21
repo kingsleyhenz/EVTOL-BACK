@@ -1,24 +1,26 @@
-import User from '../models/user.model.js';
+import User, { IUser } from '../models/user.model.js';
+import { CreateUserDto } from '../dto/user.dto.js';
 
 class UserService {
-  async registerUser(userData: any) {
-    return await User.create(userData);
+  async registerUser(userData: CreateUserDto): Promise<IUser> {
+    const user = new User(userData);
+    return await user.save();
   }
 
-  async findByEmail(email: string) {
-    return await User.findOne({ email });
+  async findByEmail(email: string): Promise<IUser | null> {
+    return await User.findOne({ email }).exec();
   }
 
-  async getUserById(id: string) {
-    return await User.findById(id).populate('requests notification');
+  async getUserById(id: string): Promise<IUser | null> {
+    return await User.findById(id).populate('requests notification').exec();
   }
 
-  async updateUser(id: string, updateData: any) {
-    return await User.findByIdAndUpdate(id, updateData, { new: true });
+  async updateUser(id: string, updateData: Partial<IUser>): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(id, updateData, { new: true }).exec();
   }
 
-  async getAllUsers() {
-    return await User.find();
+  async getAllUsers(): Promise<IUser[]> {
+    return await User.find().exec();
   }
 }
 
