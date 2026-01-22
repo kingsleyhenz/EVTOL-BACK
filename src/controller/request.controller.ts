@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 import RequestService from '../services/request.service.js';
 import UserService from '../services/user.service.js';
 import NotificationService from '../services/notification.service.js';
+import { RequestStatus } from '../typings/enums.js';
 
 class RequestController {
-  async makeRequest(req: any, res: Response) {
+  public async makeRequest(req: any, res: Response): Promise<Response> {
     const userId = req.userAuth?._id;
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -12,7 +13,7 @@ class RequestController {
 
     try {
       const { parcelWidth, parcelHeight, parcelLength } = req.body;
-      const volume = parcelWidth * parcelHeight * parcelLength;
+      const volume = (parcelWidth || 0) * (parcelHeight || 0) * (parcelLength || 0);
       const parcelWeight = volume * 0.01;
 
       const newRequest = await RequestService.createRequest({
@@ -20,7 +21,6 @@ class RequestController {
         parcelWeight
       }, userId);
 
-      // Simple implementation of notification call
       const notification = await NotificationService.createNotification({
         title: "Request Created",
         body: `Your request with ID ${newRequest._id} has been successfully created.`
@@ -28,8 +28,8 @@ class RequestController {
 
       const user = await UserService.getUserById(userId);
       if (user) {
-        user.requests.push(newRequest._id);
-        user.notification.push(notification._id);
+        user.requests.push(newRequest._id as any);
+        user.notification.push(notification._id as any);
         await user.save();
       }
 
@@ -39,7 +39,7 @@ class RequestController {
     }
   }
 
-  async getAllRequests(req: Request, res: Response) {
+  public async getAllRequests(req: Request, res: Response): Promise<Response> {
     try {
       const allRequests = await RequestService.getAllRequests();
       return res.status(200).json(allRequests);
@@ -48,7 +48,7 @@ class RequestController {
     }
   }
 
-  async getMyRequests(req: any, res: Response) {
+  public async getMyRequests(req: any, res: Response): Promise<Response> {
     try {
       const userId = req.userAuth?._id;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
@@ -62,7 +62,7 @@ class RequestController {
     }
   }
 
-  async getRequestById(req: Request, res: Response) {
+  public async getRequestById(req: Request, res: Response): Promise<Response> {
     try {
       const request = await RequestService.getRequestById(req.params.requestId);
       if (!request) return res.status(404).json({ error: "Request not found" });
@@ -72,10 +72,10 @@ class RequestController {
     }
   }
 
-  async acceptRequest(req: any, res: Response) {
+  public async acceptRequest(req: any, res: Response): Promise<Response> {
     try {
       const requestId = req.params.requestId;
-      const updatedRequest = await RequestService.updateRequestStatus(requestId, "Accepted");
+      const updatedRequest = await RequestService.updateRequestStatus(requestId, RequestStatus.ACCEPTED);
       
       const notification = await NotificationService.createNotification({
         title: "Request Accepted",
@@ -85,7 +85,7 @@ class RequestController {
       const userId = req.userAuth?._id;
       const user = await UserService.getUserById(userId);
       if (user) {
-        user.notification.push(notification._id);
+        user.notification.push(notification._id as any);
         await user.save();
       }
 
