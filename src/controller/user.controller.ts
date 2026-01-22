@@ -2,23 +2,21 @@ import { Request, Response } from 'express';
 import UserService from '../services/user.service.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../util/generateToken.js';
+import { CreateUserDto, LoginDto } from '../dto/user.dto.js';
 
 class UserController {
-  async register(req: Request, res: Response) {
+  public async register(req: Request, res: Response): Promise<Response> {
     try {
-      const { email, password } = req.body;
-      const existingUser = await UserService.findByEmail(email);
+      const data: CreateUserDto = req.body;
+      const existingUser = await UserService.findByEmail(data.email);
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(data.password, 10);
       await UserService.registerUser({
-        ...req.body,
-        password: hashedPassword,
-        role: "User",
-        requests: [],
-        notification: []
+        ...data,
+        password: hashedPassword
       });
 
       return res.status(201).json({ message: "Account Registered Successfully" });
@@ -27,9 +25,9 @@ class UserController {
     }
   }
 
-  async login(req: Request, res: Response) {
+  public async login(req: Request, res: Response): Promise<Response> {
     try {
-      const { email, password } = req.body;
+      const { email, password }: LoginDto = req.body;
       const user = await UserService.findByEmail(email);
       if (!user) {
         return res.status(400).json({ message: "User not registered" });
@@ -51,7 +49,7 @@ class UserController {
     }
   }
 
-  async getProfile(req: any, res: Response) {
+  public async getProfile(req: any, res: Response): Promise<Response> {
     try {
       const userId = req.userAuth?._id;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
