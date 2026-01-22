@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import NotificationService from '../services/notification.service.js';
 import UserService from '../services/user.service.js';
 
 class NotificationController {
-  async getMyNotifications(req: any, res: Response) {
+  public async getMyNotifications(req: any, res: Response): Promise<Response> {
     try {
       const userId = req.userAuth?._id;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
@@ -17,7 +17,7 @@ class NotificationController {
     }
   }
 
-  async getNotificationById(req: any, res: Response) {
+  public async getNotificationById(req: any, res: Response): Promise<Response> {
     try {
       const userId = req.userAuth?._id;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
