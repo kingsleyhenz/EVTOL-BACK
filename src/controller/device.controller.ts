@@ -1,78 +1,75 @@
 import { Request, Response } from 'express';
 import DeviceService from '../services/device.service.js';
+import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.js';
 import nodemailer from 'nodemailer';
 
 class DeviceController {
-  async registerDevice(req: Request, res: Response) {
-    const { serialNo, model, weight, battery, state } = req.body;
+  public async registerDevice(req: Request, res: Response): Promise<Response> {
+    const data: CreateDeviceDto = req.body;
     try {
-      // Check if already exists could be a service method too
-      const existing = await DeviceService.getDeviceById(serialNo); // Assuming serialNo is unique but not ID, wait
-      // Actually the service uses _id. Let's stick to the logic in original
-      
-      const evtol = await DeviceService.createDevice(req.body);
-      return res.json({
+      const evtol = await DeviceService.createDevice(data);
+      return res.status(201).json({
         status: "Success",
         data: evtol,
       });
     } catch (error: any) {
-      return res.json({
+      return res.status(400).json({
         status: "error",
         message: error.message,
       });
     }
   }
 
-  async getAllDevices(req: Request, res: Response) {
+  public async getAllDevices(req: Request, res: Response): Promise<Response> {
     try {
       const devices = await DeviceService.getAllDevices();
-      return res.json({
+      return res.status(200).json({
         status: "Success",
         data: devices,
       });
     } catch (error: any) {
-      return res.json({
+      return res.status(500).json({
         status: "error",
         message: error.message,
       });
     }
   }
 
-  async getAvailableDevices(req: Request, res: Response) {
+  public async getAvailableDevices(req: Request, res: Response): Promise<Response> {
     try {
       const devices = await DeviceService.findAvailableDevices();
-      return res.json({
+      return res.status(200).json({
         status: "Success",
         data: devices,
       });
     } catch (error: any) {
-      return res.json({
+      return res.status(500).json({
         status: "error",
         message: error.message,
       });
     }
   }
 
-  async sendConfirmationEmail(name: string, email: string) {
+  public async sendConfirmationEmail(name: string, email: string): Promise<void> {
     try {
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
         secure: true,
         auth: {
-          user: "ayehenz29@gmail.com",
-          pass: "xfkpqulivwwhwisc",
+          user: process.env.EMAIL_USER || "ayehenz29@gmail.com",
+          pass: process.env.EMAIL_PASS || "xfkpqulivwwhwisc",
         },
       });
       const mailOptions = {
-        from: "ayehenz29@gmail.com",
+        from: process.env.EMAIL_USER || "ayehenz29@gmail.com",
         to: email,
         subject: "Drone On Its Way!",
-        text: `Thank you for using our services ,\n\nThe ${name} You Requested For Is On Its Way. To track your Medication kindly use this link: https://www.linktrack.appspot.com`,
+        text: `Thank you for using our services ,\n\nThe ${name} You Requested For Is On Its Way.`,
       };
       await transporter.sendMail(mailOptions);
     } catch (error: any) {
-      console.log(error.message);
+      console.log("Email error:", error.message);
     }
   }
 }
