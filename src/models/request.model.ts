@@ -54,7 +54,7 @@ const requestSchema = new Schema<IRequest>({
   recipientCountry: String,
   recipientState: String,
   recipientCity: String,
-  recipientaddress: String,
+  recipientAddress: String,
   item: {
     type: String,
     required: true,
