@@ -2,10 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from './config/dbConnect.ts';
-import evRouter from './routes/device.route.ts';
-import requestRoute from "./routes/request.route.ts";
-import userRoute from "./routes/user.route.ts";
-import messageRoute from "./routes/notification.route.ts";
+import mainRouter from "./routes/index.ts";
 import { errorHandler, notFound } from "./middleware/errorHandler.ts";
 
 dotenv.config();
@@ -25,10 +22,7 @@ app.use(cors({
 app.options('*', cors());
 
 // Routes
-app.use("/api/v1/evtol/admin", evRouter);
-app.use("/api/v1/request", requestRoute);
-app.use("/api/v1/user", userRoute);
-app.use("/api/v1/notification", messageRoute);
+app.use("/api/v1", mainRouter);
 
 // Error Handling
 app.use(notFound);
