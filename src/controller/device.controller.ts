@@ -2,21 +2,16 @@ import { Request, Response } from 'express';
 import DeviceService from '../services/device.service.js';
 import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.js';
 import nodemailer from 'nodemailer';
+import { ResponseUtil } from '../util/response.util.js';
 
 class DeviceController {
   public async registerDevice(req: Request, res: Response): Promise<Response> {
     const data: CreateDeviceDto = req.body;
     try {
       const evtol = await DeviceService.createDevice(data);
-      return res.status(201).json({
-        status: "Success",
-        data: evtol,
-      });
+      return ResponseUtil.success(res, evtol, 201);
     } catch (error: any) {
-      return res.status(400).json({
-        status: "error",
-        message: error.message,
-      });
+      return ResponseUtil.error(res, error.message, 400);
     }
   }
 
