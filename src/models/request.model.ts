@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { RequestStatus } from "../typings/enums.js";
+import { RequestStatus } from "../typings/enums.ts";
 
 export interface IRequest extends Document {
   user: mongoose.Types.ObjectId;

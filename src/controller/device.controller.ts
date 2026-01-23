@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import DeviceService from '../services/device.service.js';
-import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.js';
+import DeviceService from '../services/device.service.ts';
+import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.ts';
 import nodemailer from 'nodemailer';
-import { ResponseUtil } from '../util/response.util.js';
+import { ResponseUtil } from '../util/response.util.ts';
 
 class DeviceController {
   public async registerDevice(req: Request, res: Response): Promise<Response> {

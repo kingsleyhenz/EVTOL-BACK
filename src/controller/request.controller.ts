@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import RequestService from '../services/request.service.js';
-import UserService from '../services/user.service.js';
-import NotificationService from '../services/notification.service.js';
-import { RequestStatus } from '../typings/enums.js';
+import RequestService from '../services/request.service.ts';
+import UserService from '../services/user.service.ts';
+import NotificationService from '../services/notification.service.ts';
+import { RequestStatus } from '../typings/enums.ts';
 
 class RequestController {
   public async makeRequest(req: any, res: Response): Promise<Response> {

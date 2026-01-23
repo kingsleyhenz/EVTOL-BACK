@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { DeviceState } from '../typings/enums.js';
+import { DeviceState } from '../typings/enums.ts';
 
 export interface IDevice extends Document {
     serialNo: string;

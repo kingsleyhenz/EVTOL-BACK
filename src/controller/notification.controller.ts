@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import NotificationService from '../services/notification.service.js';
-import UserService from '../services/user.service.js';
+import NotificationService from '../services/notification.service.ts';
+import UserService from '../services/user.service.ts';
 
 class NotificationController {
   public async getMyNotifications(req: any, res: Response): Promise<Response> {

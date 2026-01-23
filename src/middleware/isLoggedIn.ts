@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { TokenFromHeader } from "../util/tokenFromHeader.js";
-import { verifyToken } from "../util/verifyToken.js";
+import { TokenFromHeader } from "../util/tokenFromHeader.ts";
+import { verifyToken } from "../util/verifyToken.ts";
 
 export const isLoggedIn = (req: any, res: Response, next: NextFunction) => {
     try {

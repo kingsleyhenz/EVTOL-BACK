@@ -1,5 +1,5 @@
-import User, { IUser } from '../models/user.model.js';
-import { CreateUserDto } from '../dto/user.dto.js';
+import User, { IUser } from '../models/user.model.ts';
+import { CreateUserDto } from '../dto/user.dto.ts';
 
 class UserService {
   async registerUser(userData: CreateUserDto): Promise<IUser> {

@@ -1,12 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { connectDB } from './config/dbConnect.js';
-import evRouter from './routes/device.route.js';
-import requestRoute from "./routes/request.route.js";
-import userRoute from "./routes/user.route.js";
-import messageRoute from "./routes/notification.route.js";
-import { errorHandler, notFound } from "./middleware/errorHandler.js";
+import { connectDB } from './config/dbConnect.ts';
+import evRouter from './routes/device.route.ts';
+import requestRoute from "./routes/request.route.ts";
+import userRoute from "./routes/user.route.ts";
+import messageRoute from "./routes/notification.route.ts";
+import { errorHandler, notFound } from "./middleware/errorHandler.ts";
 
 dotenv.config();
 connectDB();

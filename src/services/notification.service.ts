@@ -1,4 +1,4 @@
-import Messages from '../models/notification.model.js';
+import Messages from '../models/notification.model.ts';
 
 class NotificationService {
   async createNotification(data: { title: string; body: string; status?: string }) {

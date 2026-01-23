@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 
-export const verifyToken = token =>{
-    return jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
-        if(err){
+export const verifyToken = (token: string) => {
+    return jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
+        if (err) {
             return false;
-        }else{
+        } else {
             return decoded;
         }
     })

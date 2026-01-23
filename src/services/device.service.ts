@@ -1,6 +1,6 @@
-import Device, { IDevice } from '../models/device.model.js';
-import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.js';
-import { DeviceState } from '../typings/enums.js';
+import Device, { IDevice } from '../models/device.model.ts';
+import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.ts';
+import { DeviceState } from '../typings/enums.ts';
 
 class DeviceService {
   async createDevice(data: CreateDeviceDto): Promise<IDevice> {

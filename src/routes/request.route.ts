@@ -1,6 +1,6 @@
 import express from 'express';
-import RequestController from '../controller/request.controller.js';
-import { isLoggedIn } from '../middleware/isLoggedIn.js';
+import RequestController from '../controller/request.controller.ts';
+import { isLoggedIn } from '../middleware/isLoggedIn.ts';
 
 const requestRoute = express.Router();
 

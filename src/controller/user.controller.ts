@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import UserService from '../services/user.service.js';
+import UserService from '../services/user.service.ts';
 import bcrypt from 'bcrypt';
-import { generateToken } from '../util/generateToken.js';
-import { CreateUserDto, LoginDto } from '../dto/user.dto.js';
+import { generateToken } from '../util/generateToken.ts';
+import { CreateUserDto, LoginDto } from '../dto/user.dto.ts';
 
 class UserController {
   public async register(req: Request, res: Response): Promise<Response> {

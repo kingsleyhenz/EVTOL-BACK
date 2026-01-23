@@ -1,6 +1,6 @@
 import express from "express";
-import NotificationController from "../controller/notification.controller.js";
-import { isLoggedIn } from '../middleware/isLoggedIn.js';
+import NotificationController from "../controller/notification.controller.ts";
+import { isLoggedIn } from '../middleware/isLoggedIn.ts';
 
 const messageRoute = express.Router();
 

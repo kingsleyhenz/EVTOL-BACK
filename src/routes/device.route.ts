@@ -1,6 +1,6 @@
 import express from "express";
-import DeviceController from '../controller/device.controller.js';
-import storage from "../config/cloudconfig.js";
+import DeviceController from '../controller/device.controller.ts';
+import storage from "../config/cloudconfig.ts";
 import multer from "multer";
 
 const evRouter = express.Router();

@@ -1,6 +1,6 @@
-import Request, { IRequest } from '../models/request.model.js';
-import { CreateRequestDto } from '../dto/request.dto.js';
-import { RequestStatus } from '../typings/enums.js';
+import Request, { IRequest } from '../models/request.model.ts';
+import { CreateRequestDto } from '../dto/request.dto.ts';
+import { RequestStatus } from '../typings/enums.ts';
 
 class RequestService {
   async createRequest(data: CreateRequestDto, userId: string): Promise<IRequest> {
