@@ -64,7 +64,7 @@ class RequestController {
 
   public async getRequestById(req: Request, res: Response): Promise<Response> {
     try {
-      const request = await RequestService.getRequestById(req.params.requestId);
+      const request = await RequestService.getRequestById(req.params.requestId as string);
       if (!request) return res.status(404).json({ error: "Request not found" });
       return res.status(200).json(request);
     } catch (error: any) {
@@ -74,7 +74,7 @@ class RequestController {
 
   public async acceptRequest(req: any, res: Response): Promise<Response> {
     try {
-      const requestId = req.params.requestId;
+      const requestId = req.params.requestId as string;
       const updatedRequest = await RequestService.updateRequestStatus(requestId, RequestStatus.ACCEPTED);
       
       const notification = await NotificationService.createNotification({

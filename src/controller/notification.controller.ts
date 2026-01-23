@@ -22,7 +22,7 @@ class NotificationController {
       const userId = req.userAuth?._id;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
-      const notificationId = req.params.notificationId;
+      const notificationId = req.params.notificationId as string;
       const notification = await NotificationService.getNotificationById(notificationId);
       
       if (!notification) return res.status(404).json({ error: "Notification not found" });
