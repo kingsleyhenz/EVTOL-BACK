@@ -38,7 +38,7 @@ class UserController {
         return res.status(400).json({ message: "Invalid Credentials" });
       }
 
-      const token = generateToken(user);
+      const token = generateToken(user._id.toString());
       return res.status(200).json({
         status: "Success",
         token,
