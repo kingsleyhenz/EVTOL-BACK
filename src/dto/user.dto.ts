@@ -1,19 +1,39 @@
-export interface CreateUserDto {
-  fullName: string;
+import { IsString, IsEmail, IsNotEmpty, MinLength, IsOptional, IsNumber } from 'class-validator';
+
+export class CreateUserDto {
+  @IsString()
+  @IsNotEmpty()
+  fullName!: string;
+
+  @IsString()
+  @IsOptional()
   username?: string;
-  email: string;
-  password: string;
+
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  password!: string;
+
+  @IsNumber()
+  @IsOptional()
   phoneNo?: number;
 }
 
-export interface LoginDto {
-  email: string;
-  password: string;
+export class LoginDto {
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
 }
 
-export interface UserResponseDto {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
+export class UserResponseDto {
+  id!: string;
+  fullName!: string;
+  email!: string;
+  role!: string;
 }
