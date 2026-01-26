@@ -1,26 +1,80 @@
-import { RequestStatus } from '../typings/enums';
+import { IsString, IsEmail, IsNotEmpty, IsOptional, IsNumber, IsDate, IsEnum } from 'class-validator';
+import { RequestStatus } from '../typings/enums.ts';
 
-export interface CreateRequestDto {
-  recipientName: string;
-  recipientEmail: string;
-  recipientPhone: string;
+export class CreateRequestDto {
+  @IsString()
+  @IsNotEmpty()
+  recipientName!: string;
+
+  @IsEmail()
+  recipientEmail!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  recipientPhone!: string;
+
+  @IsString()
+  @IsOptional()
   parcelCountry?: string;
+
+  @IsString()
+  @IsOptional()
   parcelState?: string;
+
+  @IsString()
+  @IsOptional()
   parcelCity?: string;
+
+  @IsString()
+  @IsOptional()
   parcelAddress?: string;
+
+  @IsNumber()
+  @IsOptional()
   parcelWidth?: number;
+
+  @IsNumber()
+  @IsOptional()
   parcelHeight?: number;
+
+  @IsNumber()
+  @IsOptional()
   parcelLength?: number;
-  parcelWeight: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  parcelWeight!: number;
+
+  @IsString()
+  @IsOptional()
   recipientCountry?: string;
+
+  @IsString()
+  @IsOptional()
   recipientState?: string;
+
+  @IsString()
+  @IsOptional()
   recipientCity?: string;
-  recipientaddress?: string;
-  item: string;
-  description: string;
+
+  @IsString()
+  @IsOptional()
+  recipientAddress?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  item!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description!: string;
+
+  @IsDate()
+  @IsOptional()
   requestedDate?: Date;
 }
 
-export interface UpdateRequestStatusDto {
-  status: RequestStatus;
+export class UpdateRequestStatusDto {
+  @IsEnum(RequestStatus)
+  status!: RequestStatus;
 }
