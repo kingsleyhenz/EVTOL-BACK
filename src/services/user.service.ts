@@ -1,7 +1,7 @@
 import User, { IUser } from '../models/user.model.ts';
 import { CreateUserDto } from '../dto/user.dto.ts';
 
-class UserService {
+export class UserService {
   async registerUser(userData: CreateUserDto): Promise<IUser> {
     const user = new User(userData);
     return await user.save();
@@ -24,4 +24,4 @@ class UserService {
   }
 }
 
-export default new UserService();
+

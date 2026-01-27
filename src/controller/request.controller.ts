@@ -4,7 +4,7 @@ import UserService from '../services/user.service.ts';
 import NotificationService from '../services/notification.service.ts';
 import { RequestStatus } from '../typings/enums.ts';
 
-class RequestController {
+export class RequestController {
   public async makeRequest(req: any, res: Response): Promise<Response> {
     const userId = req.userAuth?._id;
     if (!userId) {
@@ -96,4 +96,4 @@ class RequestController {
   }
 }
 
-export default new RequestController();
+

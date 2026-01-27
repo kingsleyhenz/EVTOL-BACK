@@ -4,7 +4,7 @@ import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.ts';
 import nodemailer from 'nodemailer';
 import { ResponseUtil } from '../util/response.util.ts';
 
-class DeviceController {
+export class DeviceController {
   public async registerDevice(req: Request, res: Response): Promise<Response> {
     const data: CreateDeviceDto = req.body;
     try {
@@ -69,4 +69,4 @@ class DeviceController {
   }
 }
 
-export default new DeviceController();
+

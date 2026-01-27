@@ -1,6 +1,6 @@
 import Messages from '../models/notification.model.ts';
 
-class NotificationService {
+export class NotificationService {
   async createNotification(data: { title: string; body: string; status?: string }) {
     return await Messages.create({ ...data, status: data.status || 'Unread' });
   }
@@ -18,4 +18,4 @@ class NotificationService {
   }
 }
 
-export default new NotificationService();
+

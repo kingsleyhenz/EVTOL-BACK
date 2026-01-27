@@ -2,7 +2,7 @@ import { Response } from 'express';
 import NotificationService from '../services/notification.service.ts';
 import UserService from '../services/user.service.ts';
 
-class NotificationController {
+export class NotificationController {
   public async getMyNotifications(req: any, res: Response): Promise<Response> {
     try {
       const userId = req.userAuth?._id;
@@ -35,4 +35,4 @@ class NotificationController {
   }
 }
 
-export default new NotificationController();
+

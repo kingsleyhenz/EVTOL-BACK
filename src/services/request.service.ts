@@ -2,7 +2,7 @@ import Request, { IRequest } from '../models/request.model.ts';
 import { CreateRequestDto } from '../dto/request.dto.ts';
 import { RequestStatus } from '../typings/enums.ts';
 
-class RequestService {
+export class RequestService {
   async createRequest(data: CreateRequestDto, userId: string): Promise<IRequest> {
     const request = new Request({ ...data, user: userId });
     return await request.save();
@@ -32,4 +32,4 @@ class RequestService {
   }
 }
 
-export default new RequestService();
+

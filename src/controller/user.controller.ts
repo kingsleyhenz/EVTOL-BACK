@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { generateToken } from '../util/generateToken.ts';
 import { CreateUserDto, LoginDto } from '../dto/user.dto.ts';
 
-class UserController {
+export class UserController {
   public async register(req: Request, res: Response): Promise<Response> {
     try {
       const data: CreateUserDto = req.body;
@@ -64,4 +64,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+

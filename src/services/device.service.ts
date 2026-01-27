@@ -2,7 +2,7 @@ import Device, { IDevice } from '../models/device.model.ts';
 import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.ts';
 import { DeviceState } from '../typings/enums.ts';
 
-class DeviceService {
+export class DeviceService {
   async createDevice(data: CreateDeviceDto): Promise<IDevice> {
     const device = new Device(data);
     return await device.save();
@@ -34,4 +34,4 @@ class DeviceService {
   }
 }
 
-export default new DeviceService();
+
