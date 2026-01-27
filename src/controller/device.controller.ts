@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
-import DeviceService from '../services/device.service.ts';
+import { DeviceService } from '../services/device.service.ts';
 import { CreateDeviceDto, UpdateDeviceDto } from '../dto/device.dto.ts';
 import nodemailer from 'nodemailer';
 import { ResponseUtil } from '../util/response.util.ts';
 
-export class DeviceController {
+class DeviceController {
+  private deviceService = new DeviceService();
+
   public async registerDevice(req: Request, res: Response): Promise<Response> {
     const data: CreateDeviceDto = req.body;
     try {
-      const evtol = await DeviceService.createDevice(data);
+      const evtol = await this.deviceService.createDevice(data);
       return ResponseUtil.success(res, evtol, 201);
     } catch (error: any) {
       return ResponseUtil.error(res, error.message, 400);
@@ -17,7 +19,7 @@ export class DeviceController {
 
   public async getAllDevices(req: Request, res: Response): Promise<Response> {
     try {
-      const devices = await DeviceService.getAllDevices();
+      const devices = await this.deviceService.getAllDevices();
       return res.status(200).json({
         status: "Success",
         data: devices,
@@ -32,7 +34,7 @@ export class DeviceController {
 
   public async getAvailableDevices(req: Request, res: Response): Promise<Response> {
     try {
-      const devices = await DeviceService.findAvailableDevices();
+      const devices = await this.deviceService.findAvailableDevices();
       return res.status(200).json({
         status: "Success",
         data: devices,
@@ -68,5 +70,7 @@ export class DeviceController {
     }
   }
 }
+
+export default new DeviceController();
 
 
