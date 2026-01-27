@@ -7,7 +7,7 @@ import { CreateUserDto, LoginDto } from '../dto/user.dto.ts';
 class UserController {
   private userService = new UserService();
 
-  public async register(req: Request, res: Response): Promise<Response> {
+  public register = async (req: Request, res: Response): Promise<Response> => {
     try {
       const data: CreateUserDto = req.body;
       const existingUser = await this.userService.findByEmail(data.email);
@@ -25,9 +25,9 @@ class UserController {
     } catch (error: any) {
       return res.status(500).json({ message: "Internal Server Error" });
     }
-  }
+  };
 
-  public async login(req: Request, res: Response): Promise<Response> {
+  public login = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { email, password }: LoginDto = req.body;
       const user = await this.userService.findByEmail(email);
@@ -49,9 +49,9 @@ class UserController {
     } catch (error: any) {
       return res.status(500).json({ status: "Error", message: "Failed to login" });
     }
-  }
+  };
 
-  public async getProfile(req: any, res: Response): Promise<Response> {
+  public getProfile = async (req: any, res: Response): Promise<Response> => {
     try {
       const userId = req.userAuth?._id;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
@@ -63,7 +63,7 @@ class UserController {
     } catch (error: any) {
       return res.status(500).json({ message: "Internal Server Error" });
     }
-  }
+  };
 }
 
 export default new UserController();
