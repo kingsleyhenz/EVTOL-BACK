@@ -7,7 +7,7 @@ import { ResponseUtil } from '../util/response.util.ts';
 class DeviceController {
   private deviceService = new DeviceService();
 
-  public async registerDevice(req: Request, res: Response): Promise<Response> {
+  public registerDevice = async (req: Request, res: Response): Promise<Response> => {
     const data: CreateDeviceDto = req.body;
     try {
       const evtol = await this.deviceService.createDevice(data);
@@ -15,9 +15,9 @@ class DeviceController {
     } catch (error: any) {
       return ResponseUtil.error(res, error.message, 400);
     }
-  }
+  };
 
-  public async getAllDevices(req: Request, res: Response): Promise<Response> {
+  public getAllDevices = async (req: Request, res: Response): Promise<Response> => {
     try {
       const devices = await this.deviceService.getAllDevices();
       return res.status(200).json({
@@ -30,9 +30,9 @@ class DeviceController {
         message: error.message,
       });
     }
-  }
+  };
 
-  public async getAvailableDevices(req: Request, res: Response): Promise<Response> {
+  public getAvailableDevices = async (req: Request, res: Response): Promise<Response> => {
     try {
       const devices = await this.deviceService.findAvailableDevices();
       return res.status(200).json({
@@ -45,7 +45,7 @@ class DeviceController {
         message: error.message,
       });
     }
-  }
+  };
 
   public async sendConfirmationEmail(name: string, email: string): Promise<void> {
     try {
