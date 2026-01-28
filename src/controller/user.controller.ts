@@ -3,6 +3,7 @@ import { UserService } from '../services/user.service.ts';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../util/generateToken.ts';
 import { CreateUserDto, LoginDto } from '../dto/user.dto.ts';
+import { ResponseUtil } from '../util/response.util.ts';
 
 class UserController {
   private userService = new UserService();
@@ -12,18 +13,13 @@ class UserController {
       const data: CreateUserDto = req.body;
       const existingUser = await this.userService.findByEmail(data.email);
       if (existingUser) {
-        return res.status(400).json({ message: "User already exists" });
+        return ResponseUtil.error(res, 'User already exists', 400);
       }
-
       const hashedPassword = await bcrypt.hash(data.password, 10);
-      await this.userService.registerUser({
-        ...data,
-        password: hashedPassword
-      });
-
-      return res.status(201).json({ message: "Account Registered Successfully" });
+      const user = await this.userService.registerUser({ ...data, password: hashedPassword });
+      return ResponseUtil.created(res, user, 'Account registered successfully');
     } catch (error: any) {
-      return res.status(500).json({ message: "Internal Server Error" });
+      return ResponseUtil.error(res, error.message);
     }
   };
 
@@ -31,41 +27,31 @@ class UserController {
     try {
       const { email, password }: LoginDto = req.body;
       const user = await this.userService.findByEmail(email);
-      if (!user) {
-        return res.status(400).json({ message: "User not registered" });
-      }
+      if (!user) return ResponseUtil.error(res, 'User not registered', 400);
 
       const isValid = await bcrypt.compare(password, user.password);
-      if (!isValid) {
-        return res.status(400).json({ message: "Invalid Credentials" });
-      }
+      if (!isValid) return ResponseUtil.error(res, 'Invalid credentials', 400);
 
       const token = generateToken(user._id.toString());
-      return res.status(200).json({
-        status: "Success",
-        token,
-        role: user.role,
-      });
+      return ResponseUtil.success(res, { token, role: user.role }, 'Login successful');
     } catch (error: any) {
-      return res.status(500).json({ status: "Error", message: "Failed to login" });
+      return ResponseUtil.error(res, error.message);
     }
   };
 
   public getProfile = async (req: any, res: Response): Promise<Response> => {
     try {
       const userId = req.userAuth?._id;
-      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      if (!userId) return ResponseUtil.unauthorized(res);
 
       const user = await this.userService.getUserById(userId);
-      if (!user) return res.status(400).json({ message: "User Not Found" });
+      if (!user) return ResponseUtil.notFound(res, 'User not found');
 
-      return res.json({ status: "Success", data: user });
+      return ResponseUtil.success(res, user, 'Profile fetched successfully');
     } catch (error: any) {
-      return res.status(500).json({ message: "Internal Server Error" });
+      return ResponseUtil.error(res, error.message);
     }
   };
 }
 
 export default new UserController();
-
-
