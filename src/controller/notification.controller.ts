@@ -1,43 +1,41 @@
 import { Response } from 'express';
 import { NotificationService } from '../services/notification.service.ts';
 import { UserService } from '../services/user.service.ts';
+import { ResponseUtil } from '../util/response.util.ts';
 
 class NotificationController {
   private notificationService = new NotificationService();
   private userService = new UserService();
 
-  public async getMyNotifications(req: any, res: Response): Promise<Response> {
+  public getMyNotifications = async (req: any, res: Response): Promise<Response> => {
     try {
       const userId = req.userAuth?._id;
-      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      if (!userId) return ResponseUtil.unauthorized(res);
 
       const user = await this.userService.getUserById(userId);
-      if (!user) return res.status(404).json({ error: "User not found" });
+      if (!user) return ResponseUtil.notFound(res, 'User not found');
 
-      return res.status(200).json(user.notification);
+      return ResponseUtil.success(res, user.notification, 'Notifications fetched successfully');
     } catch (error: any) {
-      return res.status(500).json({ error: "Failed to fetch notifications" });
+      return ResponseUtil.error(res, error.message);
     }
-  }
+  };
 
-  public async getNotificationById(req: any, res: Response): Promise<Response> {
+  public getNotificationById = async (req: any, res: Response): Promise<Response> => {
     try {
       const userId = req.userAuth?._id;
-      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      if (!userId) return ResponseUtil.unauthorized(res);
 
       const notificationId = req.params.notificationId as string;
       const notification = await this.notificationService.getNotificationById(notificationId);
-      
-      if (!notification) return res.status(404).json({ error: "Notification not found" });
+      if (!notification) return ResponseUtil.notFound(res, 'Notification not found');
 
       await this.notificationService.markAsRead(notificationId);
-      return res.status(200).json(notification);
+      return ResponseUtil.success(res, notification, 'Notification fetched successfully');
     } catch (error: any) {
-      return res.status(500).json({ error: "Failed to fetch notification" });
+      return ResponseUtil.error(res, error.message);
     }
-  }
+  };
 }
 
 export default new NotificationController();
-
-
