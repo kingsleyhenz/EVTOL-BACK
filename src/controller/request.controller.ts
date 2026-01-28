@@ -9,7 +9,7 @@ class RequestController {
   private userService = new UserService();
   private notificationService = new NotificationService();
 
-  public async makeRequest(req: any, res: Response): Promise<Response> {
+  public makeRequest = async (req: any, res: Response): Promise<Response> => {
     const userId = req.userAuth?._id;
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -41,18 +41,18 @@ class RequestController {
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 
-  public async getAllRequests(req: Request, res: Response): Promise<Response> {
+  public getAllRequests = async (req: Request, res: Response): Promise<Response> => {
     try {
       const allRequests = await this.requestService.getAllRequests();
       return res.status(200).json(allRequests);
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 
-  public async getMyRequests(req: any, res: Response): Promise<Response> {
+  public getMyRequests = async (req: any, res: Response): Promise<Response> => {
     try {
       const userId = req.userAuth?._id;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
@@ -64,9 +64,9 @@ class RequestController {
     } catch (error: any) {
       return res.status(500).json({ error: "Failed to fetch requests" });
     }
-  }
+  };
 
-  public async getRequestById(req: Request, res: Response): Promise<Response> {
+  public getRequestById = async (req: Request, res: Response): Promise<Response> => {
     try {
       const request = await this.requestService.getRequestById(req.params.requestId as string);
       if (!request) return res.status(404).json({ error: "Request not found" });
@@ -74,9 +74,9 @@ class RequestController {
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 
-  public async acceptRequest(req: any, res: Response): Promise<Response> {
+  public acceptRequest = async (req: any, res: Response): Promise<Response> => {
     try {
       const requestId = req.params.requestId as string;
       const updatedRequest = await this.requestService.updateRequestStatus(requestId, RequestStatus.ACCEPTED);
@@ -97,7 +97,7 @@ class RequestController {
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 }
 
 export default new RequestController();
